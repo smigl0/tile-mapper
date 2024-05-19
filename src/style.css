@@ -1,0 +1,161 @@
+body,
+html {
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+img {
+  image-rendering: pixelated;
+  width: 100%;
+}
+
+.spriteTr {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.spriteTr>img:hover {
+  scale: 1.5;
+  background-color: #1f1f1f;
+}
+
+body {
+  background-color: #0f0f0f;
+  display: flex;
+  flex-direction: row;
+  overflow-y: visible;
+}
+
+.aside {
+  width: 40%;
+  background-color: #1f1f1f;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  padding: 0px 5px 5x 0px;
+  box-sizing: content-box;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.main {
+  height: 100%;
+  width: 60%;
+  background-color: #0f0f0f;
+  display: flex;
+  padding: 50px;
+  box-sizing: border-box;
+  overflow: scroll;
+}
+
+.contextMenu {
+  width: 250px;
+  position: absolute;
+  z-index: 50;
+  display: none;
+  font-size: 16px;
+}
+
+.contextMenu>ul {
+  border-radius: 5px;
+  background-color: #1f1f1f;
+  list-style: none;
+  padding: 0;
+  margin: 5px 0;
+  overflow: hidden;
+  color: #dfdfdf;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  font-weight: bold;
+}
+
+.contextMenu>ul>li {
+  padding: 3px;
+}
+
+.contextMenu>ul>li:hover {
+  background-color: #3f3f3f;
+}
+
+.contextMenu>ul>li>a {
+  text-decoration: none;
+}
+
+.contextMenu-divider {
+  height: 0;
+  margin: 5px 0;
+  overflow: hidden;
+  border-top: 1px solid #3f3f3f;
+  color: rgba(0, 0, 0, 0);
+  opacity: 1;
+}
+
+.contextMenu-divider-li {
+  padding: 0 !important;
+}
+
+.contextMenu-divider-li:hover {
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.selectBox {
+  position: absolute;
+  border: solid 1px rgba(113, 44, 249, 1);
+  background-color: rgba(113, 44, 249, 0.5);
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  z-index: 100;
+  box-sizing: border-box;
+  display: none;
+}
+
+img {
+  aspect-ratio: 1/1;
+}
+
+.spriteCanvas {
+  border: solid #1f1f1f 1px;
+  height: fit-content;
+}
+
+.spriteCanvasTile {
+  aspect-ratio: 1/1;
+  border: 1px solid #1f1f1f;
+  min-width: 50px;
+  background: rgba(0, 0, 0, 0);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  image-rendering: pixelated;
+}
+
+.spriteCanvasTile:hover {
+  scale: 1.75;
+  background-color: #1f1f1f;
+  z-index: 21;
+}
+
+.spriteCanvasTileSelected {
+  background-color: rgba(113, 44, 249, 0.5);
+  border: solid rgba(113, 44, 249, 1) 2px;
+}
+
+.spriteCanvasTileClicked {
+  scale: 1.75;
+  background-color: #1f1f1f;
+  z-index: 20;
+}
+
+.spriteCanvasFilled {
+  border: 0 !important;
+  scale: 1 !important;
+}

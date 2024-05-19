@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="src/style.css">
+  <!-- <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css"> -->
+  <link rel="stylesheet" href="./node_modules/bootstrap-icons/font/bootstrap-icons.css">
+  <script type="module" src="/src/main.ts"></script>
+  <title>Tilemanager</title>
+</head>
+
+<body style="display: flex;flex-direction: column;max-height: 100vh;overflow: hidden;">
+  <div
+    style="display: flex;flex: 0 0 75px; background-color: #151515;box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;;z-index: 0;">
+  </div>
+  <div style="display: flex;min-height: calc(100% - 75px);">
+    <div class="aside" style="z-index: 1;">
+      <!-- <img src="./src/img/SNES - Final Fantasy 6 - Zozo Tiles.png" alt="" srcset=""> -->
+    </div>
+    <div class="main" id="main" oncontextmenu="return false;">
+    </div>
+  </div>
+</body>
+
+</html>
