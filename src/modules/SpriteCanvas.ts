@@ -10,12 +10,23 @@ enum SelectMode {
     standard = ""
 }
 
+interface ChangeMemory {
+    affectedTiles: HTMLElement[],
+    action: string,
+    previousTiles: number[],
+    previousDataUrls: string[]
+}
+
 export default class SpriteCanvas {
 
     public spriteTiles: Array<HTMLElement> = []
 
     public mySpriteCanvasMemory = mySpriteCanvasMemory;
     public mySelectBoxMemory;
+
+    public myChangeMemory: ChangeMemory[] = []
+    public myChangeMemoryIndex: number = 0
+
 
     constructor(spriteSheet: SpriteSheet, targetDiv: HTMLElement, width: number, height: number) {
 
@@ -126,6 +137,13 @@ export default class SpriteCanvas {
                     case 'm':
                         this.deleteTiles(this.mySelectBoxMemory.selectedArr)
                         break;
+                    case 'z':
+                        this.undo()
+                        break;
+                    case 'y':
+                    case 'q':
+                        this.redo()
+                        break;
                 }
             }
         })
@@ -183,13 +201,38 @@ export default class SpriteCanvas {
 
     copyTiles(selectedTiles: HTMLElement[]) {
 
+        selectedTiles = selectedTiles.filter((value, index, array) => array.indexOf(value) === index)
+
         let spriteDataUrls = selectedTiles.map(selectedTiles => selectedTiles.style.backgroundImage).filter((value, index, array) => array.indexOf(value) === index)
 
-        console.log(spriteDataUrls);
+        let out: Array<number> = []
+
+        selectedTiles.forEach(element => {
+            out.push(spriteDataUrls.indexOf(element.style.backgroundImage))
+        })
+
+        // note: add copying to public class memory
 
     }
 
     deleteTiles(selectedTiles: HTMLElement[]) {
+
+        let spriteDataUrls = selectedTiles.map(selectedTiles => selectedTiles.style.backgroundImage).filter((value, index, array) => array.indexOf(value) === index)
+
+        let selectedTilesCompressed: Array<number> = []
+
+        selectedTiles.forEach(element => {
+            selectedTilesCompressed.push(spriteDataUrls.indexOf(element.style.backgroundImage))
+        })
+
+        this.myChangeMemory[this.myChangeMemoryIndex] = {
+            affectedTiles: [...selectedTiles],
+            action: 'del',
+            previousTiles: selectedTilesCompressed,
+            previousDataUrls: spriteDataUrls
+        }
+
+        this.myChangeMemoryIndex++
 
         selectedTiles.forEach(element => {
             element.className = "spriteCanvasTile"
@@ -199,6 +242,47 @@ export default class SpriteCanvas {
 
         this.resetAllSelection()
 
+    }
 
+    undo() {
+        console.log('-- UNDO --');
+
+        if (this.myChangeMemoryIndex != 0) {
+            this.myChangeMemoryIndex--
+            console.log(this.myChangeMemory);
+
+            switch (this.myChangeMemory[this.myChangeMemoryIndex].action) {
+                case 'del':
+                    this.myChangeMemory[this.myChangeMemoryIndex].affectedTiles.forEach((element, index) => {
+
+
+                        element.style.backgroundImage = this.myChangeMemory[this.myChangeMemoryIndex].previousDataUrls[this.myChangeMemory[this.myChangeMemoryIndex].previousTiles[index]]
+
+                        // reset border
+                        console.log(element.style.backgroundImage);
+
+                        if (element.style.backgroundImage !== "") { element.style.border = "0px" } else { element.style.border = "" }
+                    });
+                    break;
+            }
+        }
+    }
+
+    redo() {
+        console.log('-- REDO --');
+
+        console.log(this.myChangeMemoryIndex);
+        console.log(this.myChangeMemory.length);
+
+
+        if (this.myChangeMemoryIndex < this.myChangeMemory.length) {
+            console.log(this.myChangeMemory);
+
+            switch (this.myChangeMemory[this.myChangeMemoryIndex].action) {
+                case 'del':
+                    this.deleteTiles(this.myChangeMemory[this.myChangeMemoryIndex].affectedTiles)
+                    break;
+            }
+        }
     }
 }
