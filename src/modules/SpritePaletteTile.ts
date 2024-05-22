@@ -19,12 +19,18 @@ export default class SpritePaletteTile {
 
         img.addEventListener('click', () => {
 
+            // multi tile fill
+
             if (mySelectBoxMemory.selectedArr.length != 0) {
                 mySelectBoxMemory.selectedArr.forEach(element => {
                     element.style.backgroundImage = `url(${this.spriteDataString})`
                     element.style.border = '0'
                 });
-            } else if (mySpriteCanvasMemory.selectedCanvasTile != undefined) {
+            }
+
+            // single tile fill
+
+            else if (mySpriteCanvasMemory.selectedCanvasTile != undefined) {
                 mySpriteCanvasMemory.selectedCanvasTile.style.backgroundImage = `url(${this.spriteDataString})`
             }
         })

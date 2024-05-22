@@ -4,9 +4,11 @@ export default class SpriteSheet {
 
     // public spritesArray: string[][] = [];
     public targetDiv: HTMLElement;
+    public undoMemory: object[] = new Array<object>(10)
 
     private spriteWidth: number = 0;
     private spriteHeight: number = 0;
+
 
     constructor(
         targetDiv: HTMLElement,

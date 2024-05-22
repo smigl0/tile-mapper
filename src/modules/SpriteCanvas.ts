@@ -103,20 +103,31 @@ export default class SpriteCanvas {
             contextMenuDiv.style.display = "block"
         })
 
-        document.addEventListener('mousedown', (e) => {
-            // @ts-expect-error
-            if (e.target.localName != "a" || e.target.localName != "li") {
-                contextMenuDiv.style.display = "none"
-            }
-
-        })
-
         document.addEventListener('mousedown', () => {
             this.mySelectBoxMemory.mouseDown = true
         })
 
         document.addEventListener('mouseup', () => {
             this.mySelectBoxMemory.mouseDown = false
+        })
+
+
+        // key shortcut router
+
+        document.addEventListener('keydown', (evt) => {
+            if (evt.ctrlKey) {
+                switch (evt.key) {
+                    case 'c':
+                        this.copyTiles(this.mySelectBoxMemory.selectedArr)
+                        break;
+                    case 'x':
+                        this.deleteTiles(this.mySelectBoxMemory.selectedArr)
+                        break;
+                    case 'm':
+                        this.deleteTiles(this.mySelectBoxMemory.selectedArr)
+                        break;
+                }
+            }
         })
     }
 
@@ -170,5 +181,24 @@ export default class SpriteCanvas {
 
     }
 
-    addSelectTiles() { }
+    copyTiles(selectedTiles: HTMLElement[]) {
+
+        let spriteDataUrls = selectedTiles.map(selectedTiles => selectedTiles.style.backgroundImage).filter((value, index, array) => array.indexOf(value) === index)
+
+        console.log(spriteDataUrls);
+
+    }
+
+    deleteTiles(selectedTiles: HTMLElement[]) {
+
+        selectedTiles.forEach(element => {
+            element.className = "spriteCanvasTile"
+            element.style.backgroundImage = ""
+            element.style.border = ""
+        });
+
+        this.resetAllSelection()
+
+
+    }
 }
