@@ -145,8 +145,9 @@ img {
 }
 
 .spriteCanvasTileSelected {
-  background-color: rgba(113, 44, 249, 0.5);
-  border: solid rgba(113, 44, 249, 1) 2px;
+  scale: 1 !important;
+  background-color: #5221b7 !important;
+  border: solid #712cf9 2px;
 }
 
 .spriteCanvasTileClicked {

@@ -1,11 +1,16 @@
-import SpriteCanvasTile from "./SpriteCanvasTIle";
+import SpriteCanvasTile from "./SpriteCanvasTile";
 import SpriteSheet from "./SpriteSheet";
+import SelectBox from "./SelectBox";
+
 import mySpriteCanvasMemory from "./SpriteCanvasMemory"
-import mySelectBoxMemory from "./SelectBoxMemory";
 
 export default class SpriteCanvas {
 
     public spriteTiles: Array<HTMLElement> = []
+
+    public mySpriteCanvasMemory = mySpriteCanvasMemory;
+
+    public mySelectBoxMemory;
 
     constructor(spriteSheet: SpriteSheet, targetDiv: HTMLElement, width: number, height: number) {
 
@@ -33,77 +38,9 @@ export default class SpriteCanvas {
         console.log(mySpriteCanvasMemory);
 
         //  selectbox
+        let selectBox = new SelectBox(this, targetDiv)
 
-        let selectBoxDiv = document.createElement('div')
-        selectBoxDiv.className = "selectBox"
-        selectBoxDiv.style.width = "0px"
-        selectBoxDiv.style.height = "0px"
-        targetDiv.append(selectBoxDiv)
-
-        let initialClientX = 0
-        let initialClientY = 0
-
-        targetDiv.addEventListener('mousedown', (e) => {
-            selectBoxDiv.style.display = "none"
-            selectBoxDiv.style.width = "0px"
-            selectBoxDiv.style.height = "0px"
-            initialClientX = 0
-            initialClientY = 0
-
-            selectBoxDiv.style.display = "block"
-            console.log(e.clientX);
-            console.log(e.clientY);
-
-            initialClientX = e.clientX
-            initialClientY = e.clientY
-
-            selectBoxDiv.style.top = `${e.clientY}px`
-            selectBoxDiv.style.left = `${e.clientX}px`
-
-
-            mySelectBoxMemory.initialTargetDiv = <HTMLElement>e.target
-            // @ts-expect-error
-            mySelectBoxMemory.initialTargetDivId = <HTMLElement>e.target.id
-        })
-
-        document.addEventListener('mousemove', (e) => {
-
-            if (e.clientX > initialClientX) {
-                selectBoxDiv.style.left = `${initialClientX}px`
-                selectBoxDiv.style.width = `${e.clientX - initialClientX}px`
-
-            } else {
-                selectBoxDiv.style.width = `${initialClientX - e.clientX}px`
-                selectBoxDiv.style.left = `${e.clientX}px`
-            }
-
-            if (e.clientY > initialClientY) {
-                selectBoxDiv.style.top = `${initialClientY}px`
-                selectBoxDiv.style.height = `${e.clientY - initialClientY}px`
-            } else {
-                selectBoxDiv.style.height = `${initialClientY - e.clientY}px`
-                selectBoxDiv.style.top = `${e.clientY}px`
-            }
-
-
-        })
-
-        targetDiv.addEventListener('onblur', () => {
-            selectBoxDiv.style.display = "none"
-            selectBoxDiv.style.width = "0px"
-            selectBoxDiv.style.height = "0px"
-            initialClientX = 0
-            initialClientY = 0
-        })
-
-        document.addEventListener('mouseup', (e) => {
-            selectBoxDiv.style.display = "none"
-            selectBoxDiv.style.width = "0px"
-            selectBoxDiv.style.height = "0px"
-            initialClientX = 0
-            initialClientY = 0
-            // console.log(e);
-        })
+        this.mySelectBoxMemory = selectBox.mySelectboxMemory
 
         // context menu creation  show/hide mechanism
 
@@ -154,8 +91,6 @@ export default class SpriteCanvas {
         targetDiv.append(contextMenuDiv)
 
         targetDiv.addEventListener('contextmenu', (e) => {
-            console.log('penis');
-            console.log(e);
 
             contextMenuDiv.style.top = `${e.pageY}px`
             contextMenuDiv.style.left = `${e.pageX}px`
@@ -164,8 +99,6 @@ export default class SpriteCanvas {
         })
 
         document.addEventListener('mousedown', (e) => {
-            console.log(e.target);
-
             // @ts-expect-error
             if (e.target.localName != "a" || e.target.localName != "li") {
                 contextMenuDiv.style.display = "none"
@@ -174,15 +107,27 @@ export default class SpriteCanvas {
         })
 
         document.addEventListener('mousedown', () => {
-            mySelectBoxMemory.mouseDown = true
+            this.mySelectBoxMemory.mouseDown = true
         })
 
         document.addEventListener('mouseup', () => {
-            mySelectBoxMemory.mouseDown = false
+            this.mySelectBoxMemory.mouseDown = false
         })
     }
 
     // select tiles
+
+    resetSelection() {
+        console.log("--RESETTING SELECTION METHODS--");
+
+        try { this.mySpriteCanvasMemory.buttonsArray[mySpriteCanvasMemory.selectedCanvasTileId!].className = "spriteCanvasTile" } catch (error) { }
+        this.mySpriteCanvasMemory.selectedCanvasTileId = undefined
+
+        this.mySelectBoxMemory.selectedArr.forEach(element => {
+            element.className = "spriteCanvasTile"
+        });
+
+    }
 
     selectTiles(startingTileId: string, endingTileId: string) {
         let [startingX, startingY]: number[] = startingTileId.split('-').map(Number)
@@ -194,15 +139,9 @@ export default class SpriteCanvas {
         if (startingX > endingX) { startingX -= deltaX }
         if (startingY > endingY) { startingY -= deltaY }
 
-        // console.log(deltaX, deltaY);
-
-        if (mySelectBoxMemory.previousSelected.length != 0) {
-
-        }
-
         let currentSelected: HTMLElement[] = []
 
-        mySelectBoxMemory.previousSelected.forEach(element => {
+        this.mySelectBoxMemory.selectedArr.forEach(element => {
             element.className = "spriteCanvasTile"
         });
 
@@ -211,16 +150,12 @@ export default class SpriteCanvas {
                 // console.log(mySpriteCanvasMemory.buttonsArray2d[y][x]);
                 let currentTile = mySpriteCanvasMemory.buttonsArray2d[startingY + y][startingX + x]
 
-
-
                 currentTile.className = "spriteCanvasTile spriteCanvasTileSelected"
 
                 currentSelected.push(currentTile)
             }
         }
-        mySelectBoxMemory.previousSelected = currentSelected
 
-
-        console.log('---pause---');
+        this.mySelectBoxMemory.selectedArr = currentSelected
     }
 }

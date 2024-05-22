@@ -1,17 +1,15 @@
 interface SelectBoxMemory {
     mouseDown: (boolean)
     initialTargetDiv: (HTMLElement | undefined),
-    initialTargetDivId: (string | undefined)
     endTargetDiv: (HTMLElement | undefined),
-    previousSelected: (HTMLElement[])
+    selectedArr: (HTMLElement[])
 }
 
 let mySelectBoxMemory: SelectBoxMemory = {
     mouseDown: false,
     initialTargetDiv: undefined,
-    initialTargetDivId: undefined,
     endTargetDiv: undefined,
-    previousSelected: [],
+    selectedArr: [],
 }
 
 export default mySelectBoxMemory

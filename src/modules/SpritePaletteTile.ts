@@ -1,4 +1,3 @@
-import myUserMemory from "./userData/UserMemory";
 import mySpriteCanvasMemory from "./SpriteCanvasMemory";
 
 export default class SpritePaletteTile {
@@ -18,11 +17,10 @@ export default class SpritePaletteTile {
         img.src = `${this.spriteDataString}`;
 
         img.addEventListener('click', () => {
-            if (myUserMemory.selectedCanvasTileId != undefined) {
-                mySpriteCanvasMemory.buttonsArray[myUserMemory.selectedCanvasTileId!].className = "spriteCanvasTile";
-                mySpriteCanvasMemory.buttonsArray[myUserMemory.selectedCanvasTileId!].style.backgroundImage = `url(${this.spriteDataString})`
-            } else {
-                myUserMemory.currentDataString = this.spriteDataString
+            if (mySpriteCanvasMemory.selectedCanvasTileId != undefined) {
+                mySpriteCanvasMemory.buttonsArray[mySpriteCanvasMemory.selectedCanvasTileId!].className = "spriteCanvasTile";
+                mySpriteCanvasMemory.buttonsArray[mySpriteCanvasMemory.selectedCanvasTileId!].style.backgroundImage = `url(${this.spriteDataString})`
+
             }
         })
     }

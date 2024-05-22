@@ -31,13 +31,13 @@ export default class SpriteSheet {
 
         img.onload = () => {
             // spriteSplitter
-            console.log(img.height);
-            console.log(img.width);
+            //console.log(img.height);
+            //console.log(img.width);
 
             this.spriteWidth = Number(img.width / xTiles);
             this.spriteHeight = Number(img.height / yTiles);
 
-            console.log(this);
+            //console.log(this);
 
 
             var canvas = document.createElement("canvas");
