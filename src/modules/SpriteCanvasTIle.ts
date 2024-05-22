@@ -21,18 +21,17 @@ export default class SpriteCanvasTile {
 
             // reset selection methods
 
-            spriteCanvas.resetSelection()
+            spriteCanvas.resetAllSelection()
 
             // doubleclick to cancel
 
-            if (mySpriteCanvasMemory.selectedCanvasTileId == id) {
+            if (mySpriteCanvasMemory.selectedCanvasTile == button) {
                 this.clearTileSelection()
             } else {
 
-                mySpriteCanvasMemory.selectedCanvasTileId = id;
+                mySpriteCanvasMemory.selectedCanvasTile = button;
 
                 button.className = "spriteCanvasTile spriteCanvasTileClicked"
-                try { mySpriteCanvasMemory.buttonsArray[mySpriteCanvasMemory.selectedCanvasTileIdPrevious!].className = "spriteCanvasTile" } catch (error) { }
 
             }
         })
@@ -51,7 +50,6 @@ export default class SpriteCanvasTile {
 
     clearTileSelection() {
         this.spriteDiv.className = "spriteCanvasTile";
-        mySpriteCanvasMemory.selectedCanvasTileIdPrevious = this.id
-        mySpriteCanvasMemory.selectedCanvasTileId = undefined
+        mySpriteCanvasMemory.selectedCanvasTile = undefined
     }
 }

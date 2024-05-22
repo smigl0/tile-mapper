@@ -147,13 +147,14 @@ img {
 .spriteCanvasTileSelected {
   scale: 1 !important;
   background-color: #5221b7 !important;
-  border: solid #712cf9 2px;
+  border: solid #712cf9 2px !important;
 }
 
 .spriteCanvasTileClicked {
   scale: 1.75;
   background-color: #1f1f1f;
   z-index: 20;
+  border: 0 !important;
 }
 
 .spriteCanvasFilled {

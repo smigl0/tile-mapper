@@ -4,12 +4,17 @@ import SelectBox from "./SelectBox";
 
 import mySpriteCanvasMemory from "./SpriteCanvasMemory"
 
+enum SelectMode {
+    add = "+",
+    remove = "-",
+    standard = ""
+}
+
 export default class SpriteCanvas {
 
     public spriteTiles: Array<HTMLElement> = []
 
     public mySpriteCanvasMemory = mySpriteCanvasMemory;
-
     public mySelectBoxMemory;
 
     constructor(spriteSheet: SpriteSheet, targetDiv: HTMLElement, width: number, height: number) {
@@ -117,19 +122,21 @@ export default class SpriteCanvas {
 
     // select tiles
 
-    resetSelection() {
-        console.log("--RESETTING SELECTION METHODS--");
+    resetAllSelection() {
+        console.log("--RESETTING ALL SELECTION METHODS--");
 
-        try { this.mySpriteCanvasMemory.buttonsArray[mySpriteCanvasMemory.selectedCanvasTileId!].className = "spriteCanvasTile" } catch (error) { }
-        this.mySpriteCanvasMemory.selectedCanvasTileId = undefined
+        try { this.mySpriteCanvasMemory.selectedCanvasTile!.className = "spriteCanvasTile" } catch (error) { }
+        this.mySpriteCanvasMemory.selectedCanvasTile = undefined
 
         this.mySelectBoxMemory.selectedArr.forEach(element => {
             element.className = "spriteCanvasTile"
         });
 
+        this.mySelectBoxMemory.selectedArr = []
+
     }
 
-    selectTiles(startingTileId: string, endingTileId: string) {
+    selectTiles(startingTileId: string, endingTileId: string, selectMode: SelectMode = SelectMode.standard) {
         let [startingX, startingY]: number[] = startingTileId.split('-').map(Number)
         let [endingX, endingY]: number[] = endingTileId.split('-').map(Number)
 
@@ -141,9 +148,9 @@ export default class SpriteCanvas {
 
         let currentSelected: HTMLElement[] = []
 
-        this.mySelectBoxMemory.selectedArr.forEach(element => {
-            element.className = "spriteCanvasTile"
-        });
+        if (this.mySelectBoxMemory.selectionMode == SelectMode.standard) {
+            this.resetAllSelection()
+        }
 
         for (let y = 0; y < deltaY + 1; y++) {
             for (let x = 0; x < deltaX + 1; x++) {
@@ -156,6 +163,12 @@ export default class SpriteCanvas {
             }
         }
 
-        this.mySelectBoxMemory.selectedArr = currentSelected
+        console.log(this.mySelectBoxMemory.selectedArr);
+        console.log(currentSelected);
+
+        this.mySelectBoxMemory.selectedArr = [...this.mySelectBoxMemory.selectedArr, ...currentSelected]
+
     }
+
+    addSelectTiles() { }
 }

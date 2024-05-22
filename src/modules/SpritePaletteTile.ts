@@ -1,4 +1,5 @@
 import mySpriteCanvasMemory from "./SpriteCanvasMemory";
+import mySelectBoxMemory from "./SelectBoxMemory";
 
 export default class SpritePaletteTile {
 
@@ -17,10 +18,14 @@ export default class SpritePaletteTile {
         img.src = `${this.spriteDataString}`;
 
         img.addEventListener('click', () => {
-            if (mySpriteCanvasMemory.selectedCanvasTileId != undefined) {
-                mySpriteCanvasMemory.buttonsArray[mySpriteCanvasMemory.selectedCanvasTileId!].className = "spriteCanvasTile";
-                mySpriteCanvasMemory.buttonsArray[mySpriteCanvasMemory.selectedCanvasTileId!].style.backgroundImage = `url(${this.spriteDataString})`
 
+            if (mySelectBoxMemory.selectedArr.length != 0) {
+                mySelectBoxMemory.selectedArr.forEach(element => {
+                    element.style.backgroundImage = `url(${this.spriteDataString})`
+                    element.style.border = '0'
+                });
+            } else if (mySpriteCanvasMemory.selectedCanvasTile != undefined) {
+                mySpriteCanvasMemory.selectedCanvasTile.style.backgroundImage = `url(${this.spriteDataString})`
             }
         })
     }

@@ -1,7 +1,14 @@
 import mySelectBoxMemory from "./SelectBoxMemory"
 import SpriteCanvas from "./SpriteCanvas";
 
-export default class SelectBox {
+
+enum SelectMode {
+    add = "+",
+    remove = "-",
+    standard = ""
+}
+
+class SelectBox {
 
     public mySelectboxMemory = mySelectBoxMemory;
 
@@ -21,7 +28,11 @@ export default class SelectBox {
         let initialClientY = 0
 
         targetDiv.addEventListener('mousedown', (e) => {
-            spriteCanvas.resetSelection()
+            if (e.shiftKey) {
+                this.mySelectboxMemory.selectionMode = SelectMode.remove
+            } else {
+                this.mySelectboxMemory.selectionMode = SelectMode.standard
+            }
 
             this.selectBoxDiv.style.display = "none"
             this.selectBoxDiv.style.width = "0px"
@@ -78,8 +89,10 @@ export default class SelectBox {
             this.selectBoxDiv.style.height = "0px"
             initialClientX = 0
             initialClientY = 0
-            // //console.log(mySelectBoxMemory);
+            // console.log(mySelectBoxMemory.selectedArr);
 
         })
     }
 }
+
+export default SelectBox
