@@ -21,7 +21,9 @@ export default class SpritePaletteTile {
         img.src = `${this.spriteDataString}`;
 
         img.addEventListener('click', () => {
-            spriteCanvas.drawTiles(mySelectBoxMemory.selectedArr, sprite)
+            spriteCanvas.drawTiles(mySelectBoxMemory.selectedArr, sprite, true)
+
+            spriteCanvas.autoSelect()
         })
     }
 }

@@ -54,7 +54,6 @@ export default class SpriteCanvas {
         }
 
         targetDiv.append(canvasDiv)
-        console.log(mySpriteCanvasMemory);
 
         //  selectbox
         let selectBox = new SelectBox(this, targetDiv)
@@ -136,7 +135,7 @@ export default class SpriteCanvas {
                         break;
                     case 'x':
                         this.copyTiles(this.mySelectBoxMemory.selectedArr)
-                        this.deleteTiles(this.mySelectBoxMemory.selectedArr)
+                        this.deleteTiles(this.mySelectBoxMemory.selectedArr, true)
                         break;
                     case 'm':
                         this.deleteTiles(this.mySelectBoxMemory.selectedArr)
@@ -154,6 +153,22 @@ export default class SpriteCanvas {
     }
 
     // select tiles
+
+    autoSelect() {
+        let autoSelectedTileId = this.mySpriteCanvasMemory.selectedId! + 1
+        let autoSelectedTile = this.mySpriteCanvasMemory.buttonsArray[this.mySpriteCanvasMemory.selectedId! + 1]
+        let previousAutoSelectedTile = this.mySpriteCanvasMemory.buttonsArray[this.mySpriteCanvasMemory.selectedId!]
+
+
+        this.mySpriteCanvasMemory.selectedId!++
+
+        previousAutoSelectedTile.classList.remove('spriteCanvasTileClicked')
+        autoSelectedTile.classList.add('spriteCanvasTileClicked')
+
+        this.mySpriteCanvasMemory.selectedId
+
+        this.mySelectBoxMemory.selectedArr = [autoSelectedTile]
+    }
 
     resetAllSelection() {
         console.log("--RESETTING ALL SELECTION METHODS--");
@@ -199,14 +214,14 @@ export default class SpriteCanvas {
             }
         }
 
-        console.log(this.mySelectBoxMemory.selectedArr);
-        console.log(currentSelected);
+        // console.log(this.mySelectBoxMemory.selectedArr);
+        // console.log(currentSelected);
 
         this.mySelectBoxMemory.selectedArr = [...this.mySelectBoxMemory.selectedArr, ...currentSelected]
 
     }
 
-    drawTiles(selectedTiles: HTMLElement[], spriteDataString: string) {
+    drawTiles(selectedTiles: HTMLElement[], spriteDataString: string, redoFlag: boolean = false) {
 
         // memory formula
 
@@ -235,7 +250,9 @@ export default class SpriteCanvas {
             element.classList.add('spriteCanvasFilled')
         });
 
-
+        if (redoFlag) {
+            this.capMemory()
+        }
     }
 
     copyTiles(selectedTiles: HTMLElement[]) {
@@ -254,7 +271,7 @@ export default class SpriteCanvas {
 
     }
 
-    deleteTiles(selectedTiles: HTMLElement[]) {
+    deleteTiles(selectedTiles: HTMLElement[], redoFlag: boolean = false) {
 
         // memory formula
 
@@ -285,6 +302,9 @@ export default class SpriteCanvas {
 
         this.resetAllSelection()
 
+        if (redoFlag) {
+            this.capMemory()
+        }
     }
 
     undo() {
@@ -301,8 +321,6 @@ export default class SpriteCanvas {
                 element.style.backgroundImage = this.myChangeMemory[this.myChangeMemoryIndex].previousDataUrls[this.myChangeMemory[this.myChangeMemoryIndex].previousTiles[index]]
 
                 // reset border
-                console.log(element.style.backgroundImage);
-
                 if (element.style.backgroundImage != "") { element.style.border = "0px" } else { element.style.border = ""; element.classList.remove('spriteCanvasFilled') }
 
 
@@ -312,10 +330,6 @@ export default class SpriteCanvas {
 
     redo() {
         console.log('-- REDO --');
-
-        console.log(this.myChangeMemoryIndex);
-        console.log(this.myChangeMemory.length);
-
 
         if (this.myChangeMemoryIndex < this.myChangeMemory.length) {
             console.log(this.myChangeMemory);
@@ -329,5 +343,11 @@ export default class SpriteCanvas {
                     break;
             }
         }
+    }
+
+    capMemory() {
+        this.myChangeMemory = this.myChangeMemory.slice(0, this.myChangeMemoryIndex)
+        console.log(this.myChangeMemory);
+
     }
 }

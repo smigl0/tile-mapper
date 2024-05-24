@@ -38,6 +38,7 @@ export default class SpriteCanvasTile {
 
                 mySelectBoxMemory.selectedArr = [button]
                 mySpriteCanvasMemory.selectedCanvasTile = button;
+                mySpriteCanvasMemory.selectedId = this.id
                 button.classList.add('spriteCanvasTileClicked')
 
             }
