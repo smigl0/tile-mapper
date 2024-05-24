@@ -1,3 +1,4 @@
+import SpriteCanvas from "./SpriteCanvas";
 import SpritePaletteTile from "./SpritePaletteTile";
 
 export default class SpriteSheet {
@@ -5,6 +6,7 @@ export default class SpriteSheet {
     // public spritesArray: string[][] = [];
     public targetDiv: HTMLElement;
     public undoMemory: object[] = new Array<object>(10)
+    public spriteCanvas: (SpriteCanvas | undefined) = undefined;
 
     private spriteWidth: number = 0;
     private spriteHeight: number = 0;
@@ -73,7 +75,7 @@ export default class SpriteSheet {
 
                 spriteRow.forEach(sprite => {
 
-                    let imgTile = new SpritePaletteTile(sprite)
+                    let imgTile = new SpritePaletteTile(sprite, (this.spriteCanvas as SpriteCanvas))
 
 
                     spriteRowDiv.append(imgTile.spriteDiv);

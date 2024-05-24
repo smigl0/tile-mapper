@@ -1,5 +1,6 @@
 import mySpriteCanvasMemory from "./SpriteCanvasMemory";
 import SpriteCanvas from "./SpriteCanvas";
+import mySelectBoxMemory from "./SelectBoxMemory";
 
 export default class SpriteCanvasTile {
 
@@ -19,19 +20,25 @@ export default class SpriteCanvasTile {
 
         button.addEventListener('click', () => {
 
-            // reset selection methods
-
-            spriteCanvas.resetAllSelection()
-
-            // doubleclick to cancel
-
             if (mySpriteCanvasMemory.selectedCanvasTile == button) {
-                this.clearTileSelection()
+
+                // doubleclick to cancel
+
+                spriteCanvas.resetAllSelection()
+
             } else {
 
-                mySpriteCanvasMemory.selectedCanvasTile = button;
+                // reset selection methods
 
-                button.className = "spriteCanvasTile spriteCanvasTileClicked"
+                spriteCanvas.resetAllSelection()
+
+                // since draw only uses myselectboxmemory, im writing to it the new button HTMLElement
+                // this is only to avoid redundancy
+                // (and wasting more time) :_@
+
+                mySelectBoxMemory.selectedArr = [button]
+                mySpriteCanvasMemory.selectedCanvasTile = button;
+                button.classList.add('spriteCanvasTileClicked')
 
             }
         })

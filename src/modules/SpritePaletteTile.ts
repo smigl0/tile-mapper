@@ -1,13 +1,16 @@
 import mySpriteCanvasMemory from "./SpriteCanvasMemory";
 import mySelectBoxMemory from "./SelectBoxMemory";
+import SpriteCanvas from "./SpriteCanvas";
 
 export default class SpritePaletteTile {
 
     public spriteDataString: string;
     public spriteDiv: HTMLElement;
+    public spriteCanvas: (SpriteCanvas | undefined) = undefined;
 
     constructor(
-        sprite: string
+        sprite: string,
+        spriteCanvas: SpriteCanvas
     ) {
         let img = document.createElement('img');
 
@@ -18,21 +21,7 @@ export default class SpritePaletteTile {
         img.src = `${this.spriteDataString}`;
 
         img.addEventListener('click', () => {
-
-            // multi tile fill
-
-            if (mySelectBoxMemory.selectedArr.length != 0) {
-                mySelectBoxMemory.selectedArr.forEach(element => {
-                    element.style.backgroundImage = `url(${this.spriteDataString})`
-                    element.style.border = '0'
-                });
-            }
-
-            // single tile fill
-
-            else if (mySpriteCanvasMemory.selectedCanvasTile != undefined) {
-                mySpriteCanvasMemory.selectedCanvasTile.style.backgroundImage = `url(${this.spriteDataString})`
-            }
+            spriteCanvas.drawTiles(mySelectBoxMemory.selectedArr, sprite)
         })
     }
 }

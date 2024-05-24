@@ -13,6 +13,7 @@ enum SelectMode {
 interface ChangeMemory {
     affectedTiles: HTMLElement[],
     action: string,
+    fill?: string,
     previousTiles: number[],
     previousDataUrls: string[]
 }
@@ -29,6 +30,8 @@ export default class SpriteCanvas {
 
 
     constructor(spriteSheet: SpriteSheet, targetDiv: HTMLElement, width: number, height: number) {
+
+        spriteSheet.spriteCanvas = this
 
         let canvasDiv = document.createElement('div')
         canvasDiv.classList.add('spriteCanvas')
@@ -132,6 +135,7 @@ export default class SpriteCanvas {
                         this.copyTiles(this.mySelectBoxMemory.selectedArr)
                         break;
                     case 'x':
+                        this.copyTiles(this.mySelectBoxMemory.selectedArr)
                         this.deleteTiles(this.mySelectBoxMemory.selectedArr)
                         break;
                     case 'm':
@@ -154,11 +158,14 @@ export default class SpriteCanvas {
     resetAllSelection() {
         console.log("--RESETTING ALL SELECTION METHODS--");
 
-        try { this.mySpriteCanvasMemory.selectedCanvasTile!.className = "spriteCanvasTile" } catch (error) { }
+        try {
+            this.mySpriteCanvasMemory.selectedCanvasTile!.classList.remove('spriteCanvasTileSelected');
+            this.mySpriteCanvasMemory.selectedCanvasTile!.classList.remove('spriteCanvasTileClicked');
+        } catch (error) { }
         this.mySpriteCanvasMemory.selectedCanvasTile = undefined
 
         this.mySelectBoxMemory.selectedArr.forEach(element => {
-            element.className = "spriteCanvasTile"
+            element.classList.remove("spriteCanvasTileSelected")
         });
 
         this.mySelectBoxMemory.selectedArr = []
@@ -186,7 +193,7 @@ export default class SpriteCanvas {
                 // console.log(mySpriteCanvasMemory.buttonsArray2d[y][x]);
                 let currentTile = mySpriteCanvasMemory.buttonsArray2d[startingY + y][startingX + x]
 
-                currentTile.className = "spriteCanvasTile spriteCanvasTileSelected"
+                currentTile.classList.add("spriteCanvasTileSelected")
 
                 currentSelected.push(currentTile)
             }
@@ -196,6 +203,38 @@ export default class SpriteCanvas {
         console.log(currentSelected);
 
         this.mySelectBoxMemory.selectedArr = [...this.mySelectBoxMemory.selectedArr, ...currentSelected]
+
+    }
+
+    drawTiles(selectedTiles: HTMLElement[], spriteDataString: string) {
+
+        // memory formula
+
+        let spriteDataUrls = selectedTiles.map(selectedTiles => selectedTiles.style.backgroundImage).filter((value, index, array) => array.indexOf(value) === index)
+
+        let selectedTilesCompressed: Array<number> = []
+
+        selectedTiles.forEach(element => {
+            selectedTilesCompressed.push(spriteDataUrls.indexOf(element.style.backgroundImage))
+        })
+
+        this.myChangeMemory[this.myChangeMemoryIndex] = {
+            affectedTiles: [...selectedTiles],
+            action: 'add',
+            fill: spriteDataString,
+            previousTiles: selectedTilesCompressed,
+            previousDataUrls: spriteDataUrls
+        }
+
+        this.myChangeMemoryIndex++
+
+        // endof memory formula
+
+        selectedTiles.forEach(element => {
+            element.style.backgroundImage = `url(${spriteDataString})`
+            element.classList.add('spriteCanvasFilled')
+        });
+
 
     }
 
@@ -217,6 +256,8 @@ export default class SpriteCanvas {
 
     deleteTiles(selectedTiles: HTMLElement[]) {
 
+        // memory formula
+
         let spriteDataUrls = selectedTiles.map(selectedTiles => selectedTiles.style.backgroundImage).filter((value, index, array) => array.indexOf(value) === index)
 
         let selectedTilesCompressed: Array<number> = []
@@ -233,6 +274,8 @@ export default class SpriteCanvas {
         }
 
         this.myChangeMemoryIndex++
+
+        // endof memory formula
 
         selectedTiles.forEach(element => {
             element.className = "spriteCanvasTile"
@@ -251,20 +294,19 @@ export default class SpriteCanvas {
             this.myChangeMemoryIndex--
             console.log(this.myChangeMemory);
 
-            switch (this.myChangeMemory[this.myChangeMemoryIndex].action) {
-                case 'del':
-                    this.myChangeMemory[this.myChangeMemoryIndex].affectedTiles.forEach((element, index) => {
+
+            this.myChangeMemory[this.myChangeMemoryIndex].affectedTiles.forEach((element, index) => {
 
 
-                        element.style.backgroundImage = this.myChangeMemory[this.myChangeMemoryIndex].previousDataUrls[this.myChangeMemory[this.myChangeMemoryIndex].previousTiles[index]]
+                element.style.backgroundImage = this.myChangeMemory[this.myChangeMemoryIndex].previousDataUrls[this.myChangeMemory[this.myChangeMemoryIndex].previousTiles[index]]
 
-                        // reset border
-                        console.log(element.style.backgroundImage);
+                // reset border
+                console.log(element.style.backgroundImage);
 
-                        if (element.style.backgroundImage !== "") { element.style.border = "0px" } else { element.style.border = "" }
-                    });
-                    break;
-            }
+                if (element.style.backgroundImage != "") { element.style.border = "0px" } else { element.style.border = ""; element.classList.remove('spriteCanvasFilled') }
+
+
+            })
         }
     }
 
@@ -279,6 +321,9 @@ export default class SpriteCanvas {
             console.log(this.myChangeMemory);
 
             switch (this.myChangeMemory[this.myChangeMemoryIndex].action) {
+                case 'add':
+                    this.drawTiles(this.myChangeMemory[this.myChangeMemoryIndex].affectedTiles, this.myChangeMemory[this.myChangeMemoryIndex].fill!)
+                    break
                 case 'del':
                     this.deleteTiles(this.myChangeMemory[this.myChangeMemoryIndex].affectedTiles)
                     break;
