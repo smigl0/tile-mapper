@@ -28,7 +28,6 @@ export default class SpriteCanvas {
     public myChangeMemory: ChangeMemory[] = []
     public myChangeMemoryIndex: number = 0
 
-
     constructor(spriteSheet: SpriteSheet, targetDiv: HTMLElement, width: number, height: number) {
 
         spriteSheet.spriteCanvas = this
@@ -159,6 +158,7 @@ export default class SpriteCanvas {
         let autoSelectedTile = this.mySpriteCanvasMemory.buttonsArray[this.mySpriteCanvasMemory.selectedId! + 1]
         let previousAutoSelectedTile = this.mySpriteCanvasMemory.buttonsArray[this.mySpriteCanvasMemory.selectedId!]
 
+        this.mySpriteCanvasMemory.selectedCanvasTile=autoSelectedTile
 
         this.mySpriteCanvasMemory.selectedId!++
 
