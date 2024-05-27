@@ -20,6 +20,15 @@ export default class SpriteCanvasTile {
 
         button.addEventListener('click', () => {
 
+            // reset pasteflag
+            if (spriteCanvas.pasteFlag) {
+                spriteCanvas.pasteFlag = false
+
+                spriteCanvas.pasteTilesDraw()
+
+                // redraw paste so it adds itself to memory
+            }
+
             if (mySpriteCanvasMemory.selectedCanvasTile == button) {
 
                 // doubleclick to cancel
@@ -46,9 +55,9 @@ export default class SpriteCanvasTile {
 
         button.addEventListener('mouseenter', (e) => {
             // paste preview rendering
-            if(spriteCanvas.pasteFlag){
+            if (spriteCanvas.pasteFlag) {
                 spriteCanvas.renderPasteTilePreview(this.spriteDiv.id)
-            } 
+            }
 
 
             // selectbox Interaction
