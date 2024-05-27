@@ -18,6 +18,13 @@ interface ChangeMemory {
     previousDataUrls: string[]
 }
 
+interface PasteBuffer {
+    spriteDataUrls:string[],
+    affectedTileIds:string[],
+    affectedTiles:number[],
+    affectedTilesPositionMatrix:number[][]
+}
+
 export default class SpriteCanvas {
 
     public spriteTiles: Array<HTMLElement> = []
@@ -27,6 +34,22 @@ export default class SpriteCanvas {
 
     public myChangeMemory: ChangeMemory[] = []
     public myChangeMemoryIndex: number = 0
+
+
+    // paste
+    public pasteFlag:boolean = false
+    public pastePrevious:PasteBuffer = {
+        spriteDataUrls:[],
+        affectedTileIds:[],
+        affectedTiles:[],
+        affectedTilesPositionMatrix:[]
+    }
+    public myPasteBuffer:PasteBuffer = {
+        spriteDataUrls:[],
+        affectedTileIds:[],
+        affectedTiles:[],
+        affectedTilesPositionMatrix:[]
+    }
 
     constructor(spriteSheet: SpriteSheet, targetDiv: HTMLElement, width: number, height: number) {
 
@@ -135,6 +158,9 @@ export default class SpriteCanvas {
                     case 'x':
                         this.copyTiles(this.mySelectBoxMemory.selectedArr)
                         this.deleteTiles(this.mySelectBoxMemory.selectedArr, true)
+                        break;
+                    case 'v':
+                        this.pasteTiles()
                         break;
                     case 'm':
                         this.deleteTiles(this.mySelectBoxMemory.selectedArr)
@@ -262,12 +288,90 @@ export default class SpriteCanvas {
         let spriteDataUrls = selectedTiles.map(selectedTiles => selectedTiles.style.backgroundImage).filter((value, index, array) => array.indexOf(value) === index)
 
         let out: Array<number> = []
+        let outIds: Array<string> = []
 
         selectedTiles.forEach(element => {
             out.push(spriteDataUrls.indexOf(element.style.backgroundImage))
+            outIds.push(element.id)
         })
 
         // note: add copying to public class memory
+        // note: why did i write this?
+
+        console.log({spriteDataUrls:spriteDataUrls,affectedTileIds:outIds,affectedTiles:out});
+        
+        this.myPasteBuffer = {
+            spriteDataUrls:spriteDataUrls,
+            affectedTileIds:outIds,
+            affectedTiles:out,
+            affectedTilesPositionMatrix:[]
+        }
+    }
+
+    pasteTiles(){
+
+        let initialX,initialY
+        [initialX,initialY] = this.myPasteBuffer.affectedTileIds[0].split('-').map(Number)
+        
+        this.myPasteBuffer.affectedTileIds.forEach(element=>{
+            let absoluteX,absoluteY
+            [absoluteX,absoluteY] = element.split('-').map(Number)
+            
+            this.myPasteBuffer.affectedTilesPositionMatrix.push([absoluteX-initialX,absoluteY-initialY])
+            // element.split('-').map(Number)
+        })
+        
+        console.log(this.myPasteBuffer.affectedTilesPositionMatrix);
+
+
+        // flag that is passed to all children divs
+        // so that they can render the paste preview
+        this.pasteFlag = true
+
+    }
+
+    renderPasteTilePreview(tileId:string){
+        let currentX:number
+        let currentY:number
+        
+        // these are tiles that are only affected by the paste rendering over
+        let affectedTiles:HTMLElement[]
+        let affectedTilesCompressed:number[]
+        let affectedTileDataUrls:string[]
+
+        [currentX,currentY] = tileId.split('-').map(Number)
+
+        console.log(this.myPasteBuffer);
+        
+        affectedTiles = []
+        this.myPasteBuffer.affectedTilesPositionMatrix.forEach((element,index) => {
+
+            // replace with preview
+            // this.mySpriteCanvasMemory.buttonsArray2d[currentY+element[1]][currentX+element[0]].style.backgroundImage = this.myPasteBuffer.
+                
+            // affectedTiles.push(this.mySpriteCanvasMemory.buttonsArray2d[element[1]+currentY][element[0]+currentX])
+            // // console.log(this.mySpriteCanvasMemory.buttonsArray2d[element[1]+currentY][element[0]+currentX]);
+        });
+        
+        // console.log(this.myPasteBuffer);
+
+        affectedTileDataUrls = affectedTiles.map(selectedTiles => selectedTiles.style.backgroundImage).filter((value, index, array) => array.indexOf(value) === index)
+        // console.log(affectedTiles,affectedTileDataUrls);
+
+        this.myPasteBuffer.affectedTilesPositionMatrix.forEach((element, index)=>{
+            // console.log(this.));
+            
+        })
+        
+        // });
+        
+        // affectedTiles.forEach(element => {
+        //     affectedTilesCompressed.push(affectedTileDataUrls.indexOf(element.style.backgroundImage))
+        // })
+        
+    }
+
+    renderPasteClearPrevious(){
 
     }
 

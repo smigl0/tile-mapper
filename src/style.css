@@ -142,22 +142,24 @@ img {
 .spriteCanvasTile:hover {
   scale: 1.75;
   background-color: #1f1f1f;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   z-index: 21;
 }
 
 .spriteCanvasTileSelected {
-  scale: 1 !important;
   background-color: #5221b7 !important;
   border: solid #712cf9 2px !important;
 }
 
 .spriteCanvasTileClicked {
+  /* transition: cubic-bezier(0.075, 0.82, 0.165, 1) 1s scale; */
   scale: 1.75;
   background-color: #1f1f1f;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   z-index: 20;
   border: 0 !important;
 }
 
 .spriteCanvasFilled {
-  border: 0 !important;
+  border: 0;
 }

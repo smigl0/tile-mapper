@@ -45,6 +45,11 @@ export default class SpriteCanvasTile {
         })
 
         button.addEventListener('mouseenter', (e) => {
+            // paste preview rendering
+            if(spriteCanvas.pasteFlag){
+                spriteCanvas.renderPasteTilePreview(this.spriteDiv.id)
+            } 
+
 
             // selectbox Interaction
             if (spriteCanvas.mySelectBoxMemory.mouseDown) {
