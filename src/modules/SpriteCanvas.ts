@@ -78,7 +78,7 @@ export default class SpriteCanvas {
         let canvasDiv = document.createElement('div')
         canvasDiv.classList.add('spriteCanvas')
 
-        
+
 
         for (let y = 0; y < height; y++) {
             let row = document.createElement('div')
@@ -109,46 +109,85 @@ export default class SpriteCanvas {
         let contextMenuDiv = document.createElement('div')
         contextMenuDiv.className = "contextMenu"
 
-        contextMenuDiv.innerHTML = `
-            <ul class="contextMenuUl">
-                <li>
-                    <i class="bi bi-arrow-counterclockwise"></i> Undo <span style="float:right;">Ctrl + Z</span>
-                </li>
-                <li>
-                    <i class="bi bi-arrow-clockwise"></i> Redo <span style="float:right;">Ctrl + U</span>
-                </li>
-                <li class="contextMenu-divider-li">
-                    <hr class="contextMenu-divider">
-                </li>
-                <li>
-                    <i class="bi bi-copy"></i> Copy <span style="float:right;">Ctrl + C</span>
-                </li>
-                <li>
-                    <i class="bi bi-clipboard2"></i> Paste <span style="float:right;">Ctrl + V</span>
-                </li>
-                <li>
-                    <i class="bi bi-scissors"></i> Cut <span style="float:right;">Ctrl + X</span>
-                </li>
-                <li>
-                    <i class="bi bi-trash3"></i> Delete <span style="float:right;">Ctrl + M</span>
-                </li>
-                <li class="contextMenu-divider-li">
-                    <hr class="contextMenu-divider">
-                </li>
-                <li>
-                    <i class="bi bi-plus-square-fill"></i> Toggle mapping <span style="float:right;">Ctrl + M</span>
-                </li>
-                <li class="contextMenu-divider-li">
-                    <hr class="contextMenu-divider">
-                </li>
-                <li>
-                    <i class="bi bi-floppy-fill"></i> Save <span style="float:right;">Ctrl + S</span>
-                </li>
-                <li>
-                    <i class="bi bi-file-earmark-arrow-up-fill"></i> Load <span style="float:right;">Ctrl + L</span>
-                </li>
-            </ul>
-        `
+        let ul = document.createElement('ul')
+
+        let li = document.createElement('li')
+        li.addEventListener('mousedown', () => { this.undo() })
+        li.innerHTML = '<span><i class="bi bi-arrow-counterclockwise"></i> Undo <span style="float:right;">Ctrl + Z</span>'
+        ul.appendChild(li)
+
+        li = document.createElement('li')
+        li.addEventListener('mousedown', () => { this.redo() })
+        li.innerHTML = '<span><i class="bi bi-arrow-clockwise"></i> Redo <span style="float:right;">Ctrl + U</span>'
+        ul.appendChild(li)
+
+        li = document.createElement('li')
+        li.className = "contextMenu-divider-li"
+        li.innerHTML = '<hr class="contextMenu-divider">'
+        ul.appendChild(li)
+
+        li = document.createElement('li')
+        li.addEventListener('mousedown', () => { this.copyTiles(this.mySelectBoxMemory.selectedArr) })
+        li.innerHTML = '<span><i class="bi bi-copy"></i> Copy <span style="float:right;">Ctrl + C</span>'
+        ul.appendChild(li)
+
+        li = document.createElement('li')
+        li.addEventListener('mousedown', () => { this.pasteTiles() })
+        li.innerHTML = '<span><i class="bi bi-clipboard2"></i> Paste <span style="float:right;">Ctrl + V</span>'
+        ul.appendChild(li)
+
+        li = document.createElement('li')
+        li.addEventListener('mousedown', () => {
+            this.copyTiles(this.mySelectBoxMemory.selectedArr)
+            this.deleteTiles(this.mySelectBoxMemory.selectedArr, true)
+        })
+        li.innerHTML = '<span><i class="bi bi-scissors"></i> Cut <span style="float:right;">Ctrl + X</span>'
+        ul.appendChild(li)
+
+        li = document.createElement('li')
+        li.addEventListener('mousedown', () => {
+            this.deleteTiles(this.mySelectBoxMemory.selectedArr, true)
+        })
+        li.innerHTML = '<span><i class="bi bi-trash3"></i> Delete <span style="float:right;">Ctrl + M</span>'
+        ul.appendChild(li)
+
+        li = document.createElement('li')
+        li.className = "contextMenu-divider-li"
+        li.innerHTML = '<hr class="contextMenu-divider">'
+        ul.appendChild(li)
+
+        li = document.createElement('li')
+        li.addEventListener('mousedown', () => {
+            this.autoselectFlag = Boolean(1 - Number(this.autoselectFlag))
+        })
+        li.innerHTML = '<span><i class="bi bi-plus-square-fill"></i> Toggle mapping <span style="float:right;">Ctrl + M</span>'
+        ul.appendChild(li)
+
+        li = document.createElement('li')
+        li.className = "contextMenu-divider-li"
+        li.innerHTML = '<hr class="contextMenu-divider">'
+        ul.appendChild(li)
+
+        li = document.createElement('li')
+        li.addEventListener('mousedown', () => {
+            this.save()
+        })
+        li.innerHTML = '<span><i class="bi bi-floppy-fill"></i> Save <span style="float:right;">Ctrl + S</span>'
+        ul.appendChild(li)
+
+        li = document.createElement('li')
+
+        let input = document.createElement('span')
+        input.innerHTML = '<i class="bi bi-file-earmark-arrow-up-fill"></i> Load <span style="float:right;">Ctrl + L'
+        // input.onclick = ''
+        li.onclick = this.load
+        li.appendChild(input)
+        // li.innerHTML = '<span><i class="bi bi-file-earmark-arrow-up-fill"></i> Load <span style="float:right;">Ctrl + L</span>'
+
+        ul.appendChild(li)
+
+
+        contextMenuDiv.appendChild(ul)
 
         targetDiv.append(contextMenuDiv)
 
@@ -158,6 +197,10 @@ export default class SpriteCanvas {
             contextMenuDiv.style.left = `${e.pageX}px`
 
             contextMenuDiv.style.display = "block"
+        })
+
+        targetDiv.addEventListener('click', (e) => {
+            contextMenuDiv.style.display = "none"
         })
 
         document.addEventListener('mousedown', () => {
@@ -186,9 +229,8 @@ export default class SpriteCanvas {
                         this.resetAllSelection()
                         this.renderPasteTilePreview(this.mySpriteCanvasMemory.hoveredTile!.id)
                         break;
-                    case 'm':    
-                        this.autoselectFlag = Boolean(1-Number(this.autoselectFlag))
-                        console.log(this.autoselectFlag);
+                    case 'm':
+                        this.autoselectFlag = Boolean(1 - Number(this.autoselectFlag))
                         break;
                     case 'z':
                         this.undo()
@@ -336,30 +378,30 @@ export default class SpriteCanvas {
 
     pasteTiles() {
 
-    if(!this.pasteFlag){
-    let initialX, initialY
-    [initialX, initialY] = this.myPasteBuffer.affectedTileIds[0].split('-').map(Number)
+        if (!this.pasteFlag) {
+            let initialX, initialY
+            [initialX, initialY] = this.myPasteBuffer.affectedTileIds[0].split('-').map(Number)
 
 
-    // backup of old pastebuffer
+            // backup of old pastebuffer
 
-    this.myPasteBuffer.affectedTileIds.forEach((element, index) => {
+            this.myPasteBuffer.affectedTileIds.forEach((element, index) => {
 
-        // positions
-        let absoluteX, absoluteY
-        [absoluteX, absoluteY] = element.split('-').map(Number)
+                // positions
+                let absoluteX, absoluteY
+                [absoluteX, absoluteY] = element.split('-').map(Number)
 
-        this.myPasteBuffer.affectedTilesPositionMatrix.push([absoluteX - initialX, absoluteY - initialY])
+                this.myPasteBuffer.affectedTilesPositionMatrix.push([absoluteX - initialX, absoluteY - initialY])
 
-    })
+            })
 
-    console.log(this.myPasteBuffer.affectedTilesPositionMatrix);
+            console.log(this.myPasteBuffer.affectedTilesPositionMatrix);
 
 
-    // flag that is passed to all children div
-    // so that they can render the paste preview
-    this.pasteFlag = true
-    }
+            // flag that is passed to all children div
+            // so that they can render the paste preview
+            this.pasteFlag = true
+        }
 
     }
 
@@ -372,10 +414,6 @@ export default class SpriteCanvas {
         //generation of new previous affected tiles
 
         // preview reset draw
-
-        console.log(this.myPasteBuffer.previousAffectedTiles);
-        console.log(this.myPasteBuffer.previousAffectedTileDataUrls);
-        console.log(this.myPasteBuffer.previousAffectedTilesCompressed);
 
         if (this.myPasteBuffer.previousAffectedTiles != undefined) {
             this.myPasteBuffer.previousAffectedTiles.forEach((ele, index) => {
@@ -483,7 +521,7 @@ export default class SpriteCanvas {
 
         this.pasteFlag = false
 
-        this.myPasteBuffer =  {
+        this.myPasteBuffer = {
             spriteDataUrls: [],
             compressedTiles: [],
             affectedTileIds: [],
@@ -534,7 +572,7 @@ export default class SpriteCanvas {
     undo() {
         console.log('-- UNDO --');
 
-        if (this.myChangeMemoryIndex != 0) {
+        if (this.myChangeMemoryIndex != 0 && !this.pasteFlag) {
             this.myChangeMemoryIndex--
 
 
@@ -551,50 +589,52 @@ export default class SpriteCanvas {
                 })
             } else {
                 this.myChangeMemory[this.myChangeMemoryIndex].affectedTiles.forEach((element, index) => {
-                    if(element !=undefined){
+                    if (element != undefined) {
                         element.style.backgroundImage =
-                        this.myChangeMemory[
-                            this.myChangeMemoryIndex
-                        ].previousDataUrls[
-                        this.myChangeMemory[this.myChangeMemoryIndex].previousTiles[index]
-                        ]
+                            this.myChangeMemory[
+                                this.myChangeMemoryIndex
+                            ].previousDataUrls[
+                            this.myChangeMemory[this.myChangeMemoryIndex].previousTiles[index]
+                            ]
 
-                    if (element.style.backgroundImage == '') {
-                        element.classList.remove("spriteCanvasFilled")
-                    } else {
-                    }
+                        if (element.style.backgroundImage == '') {
+                            element.classList.remove("spriteCanvasFilled")
+                        } else {
+                        }
                     }
                 })
 
             }
         }
+
+        this.renderPasteTilePreview(this.mySpriteCanvasMemory.hoveredTile!.id)
     }
 
     redo() {
         console.log('-- REDO --');
 
-        if (this.myChangeMemoryIndex < this.myChangeMemory.length) {
+        if (this.myChangeMemoryIndex < this.myChangeMemory.length && !this.pasteFlag) {
 
             switch (this.myChangeMemory[this.myChangeMemoryIndex].action) {
                 case 'add':
                     this.drawTiles(this.myChangeMemory[this.myChangeMemoryIndex].affectedTiles, this.myChangeMemory[this.myChangeMemoryIndex].fill!)
-                    break
+                    break;
                 case 'del':
                     this.deleteTiles(this.myChangeMemory[this.myChangeMemoryIndex].affectedTiles)
                     break;
                 case 'addComplex':
                     console.log(this.myChangeMemory[this.myChangeMemoryIndex]);
                     this.myChangeMemory[this.myChangeMemoryIndex].affectedTiles.forEach((element, index) => {
-                        if(element != undefined){
+                        if (element != undefined) {
                             element.style.backgroundImage =
-                            this.myChangeMemory[
-                                this.myChangeMemoryIndex
-                            ].complexFillDataUrls![
-                            this.myChangeMemory[this.myChangeMemoryIndex].complexFill![index]
-                            ]
-                        if (element.style.backgroundImage != '') {
-                            element.classList.add('spriteCanvasFilled')
-                        }
+                                this.myChangeMemory[
+                                    this.myChangeMemoryIndex
+                                ].complexFillDataUrls![
+                                this.myChangeMemory[this.myChangeMemoryIndex].complexFill![index]
+                                ]
+                            if (element.style.backgroundImage != '') {
+                                element.classList.add('spriteCanvasFilled')
+                            }
                         }
                     })
 
@@ -610,5 +650,48 @@ export default class SpriteCanvas {
         this.myChangeMemory = this.myChangeMemory.slice(0, this.myChangeMemoryIndex)
         console.log(this.myChangeMemory);
 
+    }
+
+    save() {
+        let data = ""
+        const blob = new Blob([data], { type: 'json' });
+
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a')
+        a.href = url
+        a.download = "save.json"
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+    }
+
+    load() {
+
+        var input = document.createElement('input');
+        input.type = 'file';
+
+        input.onchange = e => {
+
+            // getting a hold of the file reference
+            //@ts-ignore
+            var file = e.target.files[0];
+
+            // setting up the reader
+            var reader = new FileReader();
+            reader.readAsText(file, 'UTF-8');
+
+            // here we tell the reader what to do when it's done reading...
+            reader.onload = readerEvent => {
+                //@ts-ignore
+                var content = readerEvent.target.result; // this is the content!
+                console.log(content);
+            }
+
+        }
+
+        input.click();
+
+        console.log('');
     }
 }
