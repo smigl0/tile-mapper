@@ -59,6 +59,7 @@ export default class SpriteCanvasTile {
                 spriteCanvas.renderPasteTilePreview(this.spriteDiv.id)
             }
 
+            mySpriteCanvasMemory.hoveredTile = button
 
             // selectbox Interaction
             if (spriteCanvas.mySelectBoxMemory.mouseDown) {

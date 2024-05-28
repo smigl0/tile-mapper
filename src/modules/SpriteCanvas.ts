@@ -69,12 +69,16 @@ export default class SpriteCanvas {
         affectedTilesPositionMatrix: []
     }
 
+    public autoselectFlag = true
+
     constructor(spriteSheet: SpriteSheet, targetDiv: HTMLElement, width: number, height: number) {
 
         spriteSheet.spriteCanvas = this
 
         let canvasDiv = document.createElement('div')
         canvasDiv.classList.add('spriteCanvas')
+
+        
 
         for (let y = 0; y < height; y++) {
             let row = document.createElement('div')
@@ -180,9 +184,11 @@ export default class SpriteCanvas {
                     case 'v':
                         this.pasteTiles()
                         this.resetAllSelection()
+                        this.renderPasteTilePreview(this.mySpriteCanvasMemory.hoveredTile!.id)
                         break;
-                    case 'm':
-                        this.deleteTiles(this.mySelectBoxMemory.selectedArr)
+                    case 'm':    
+                        this.autoselectFlag = Boolean(1-Number(this.autoselectFlag))
+                        console.log(this.autoselectFlag);
                         break;
                     case 'z':
                         this.undo()

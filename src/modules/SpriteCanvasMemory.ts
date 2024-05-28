@@ -2,7 +2,8 @@ interface SpriteCanvasMemory {
     buttonsArray: Array<HTMLElement>,
     buttonsArray2d: HTMLElement[][],
     selectedCanvasTile: (HTMLElement | undefined),
-    selectedId?: number
+    selectedId?: number,
+    hoveredTile?: HTMLButtonElement
 }
 
 let mySpriteCanvasMemory: SpriteCanvasMemory = {

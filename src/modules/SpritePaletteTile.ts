@@ -26,7 +26,9 @@ export default class SpritePaletteTile {
 
             if (mySelectBoxMemory.selectedArr.length == 1) {
                 spriteCanvas.resetAllSelection()
-                spriteCanvas.autoSelect()
+                if(spriteCanvas.autoselectFlag){
+                    spriteCanvas.autoSelect()
+                }
             }
         })
     }
