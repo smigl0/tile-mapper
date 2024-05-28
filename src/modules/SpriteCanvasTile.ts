@@ -20,16 +20,20 @@ export default class SpriteCanvasTile {
 
         button.addEventListener('click', () => {
 
+
+            let pastedFlag:boolean = false
             // reset pasteflag
             if (spriteCanvas.pasteFlag) {
+                pastedFlag = true
                 spriteCanvas.pasteFlag = false
 
                 spriteCanvas.pasteTilesDraw()
 
                 // redraw paste so it adds itself to memory
             }
+            
 
-            if (mySpriteCanvasMemory.selectedCanvasTile == button) {
+            if (mySpriteCanvasMemory.selectedCanvasTile == button || spriteCanvas.pasteFlag) {
 
                 // doubleclick to cancel
 
@@ -62,7 +66,7 @@ export default class SpriteCanvasTile {
             mySpriteCanvasMemory.hoveredTile = button
 
             // selectbox Interaction
-            if (spriteCanvas.mySelectBoxMemory.mouseDown) {
+            if (spriteCanvas.mySelectBoxMemory.mouseDown && spriteCanvas.pasteFlag) {
                 spriteCanvas.mySelectBoxMemory.endTargetDiv = (e.target as HTMLElement)
                 spriteCanvas.selectTiles(spriteCanvas.mySelectBoxMemory.initialTargetDiv!.id, (e.target as HTMLElement).id)
             }

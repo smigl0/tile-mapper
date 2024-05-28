@@ -336,28 +336,30 @@ export default class SpriteCanvas {
 
     pasteTiles() {
 
-        let initialX, initialY
-        [initialX, initialY] = this.myPasteBuffer.affectedTileIds[0].split('-').map(Number)
+    if(!this.pasteFlag){
+    let initialX, initialY
+    [initialX, initialY] = this.myPasteBuffer.affectedTileIds[0].split('-').map(Number)
 
 
-        // backup of old pastebuffer
+    // backup of old pastebuffer
 
-        this.myPasteBuffer.affectedTileIds.forEach((element, index) => {
+    this.myPasteBuffer.affectedTileIds.forEach((element, index) => {
 
-            // positions
-            let absoluteX, absoluteY
-            [absoluteX, absoluteY] = element.split('-').map(Number)
+        // positions
+        let absoluteX, absoluteY
+        [absoluteX, absoluteY] = element.split('-').map(Number)
 
-            this.myPasteBuffer.affectedTilesPositionMatrix.push([absoluteX - initialX, absoluteY - initialY])
+        this.myPasteBuffer.affectedTilesPositionMatrix.push([absoluteX - initialX, absoluteY - initialY])
 
-        })
+    })
 
-        console.log(this.myPasteBuffer.affectedTilesPositionMatrix);
+    console.log(this.myPasteBuffer.affectedTilesPositionMatrix);
 
 
-        // flag that is passed to all children div
-        // so that they can render the paste preview
-        this.pasteFlag = true
+    // flag that is passed to all children div
+    // so that they can render the paste preview
+    this.pasteFlag = true
+    }
 
     }
 
@@ -479,6 +481,16 @@ export default class SpriteCanvas {
 
         this.myChangeMemoryIndex++
 
+        this.pasteFlag = false
+
+        this.myPasteBuffer =  {
+            spriteDataUrls: [],
+            compressedTiles: [],
+            affectedTileIds: [],
+            affectedTiles: [],
+            affectedTilesPositionMatrix: []
+        }
+
         console.log(this.myChangeMemory);
 
     }
@@ -539,7 +551,8 @@ export default class SpriteCanvas {
                 })
             } else {
                 this.myChangeMemory[this.myChangeMemoryIndex].affectedTiles.forEach((element, index) => {
-                    element.style.backgroundImage =
+                    if(element !=undefined){
+                        element.style.backgroundImage =
                         this.myChangeMemory[
                             this.myChangeMemoryIndex
                         ].previousDataUrls[
@@ -549,6 +562,7 @@ export default class SpriteCanvas {
                     if (element.style.backgroundImage == '') {
                         element.classList.remove("spriteCanvasFilled")
                     } else {
+                    }
                     }
                 })
 
@@ -571,7 +585,8 @@ export default class SpriteCanvas {
                 case 'addComplex':
                     console.log(this.myChangeMemory[this.myChangeMemoryIndex]);
                     this.myChangeMemory[this.myChangeMemoryIndex].affectedTiles.forEach((element, index) => {
-                        element.style.backgroundImage =
+                        if(element != undefined){
+                            element.style.backgroundImage =
                             this.myChangeMemory[
                                 this.myChangeMemoryIndex
                             ].complexFillDataUrls![
@@ -580,12 +595,15 @@ export default class SpriteCanvas {
                         if (element.style.backgroundImage != '') {
                             element.classList.add('spriteCanvasFilled')
                         }
+                        }
                     })
 
                     this.myChangeMemoryIndex++
                     break;
             }
         }
+
+        this.renderPasteTilePreview(this.mySpriteCanvasMemory.hoveredTile!.id)
     }
 
     capMemory() {
