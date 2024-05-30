@@ -27,6 +27,7 @@ img {
 .spriteTr>img:hover {
   scale: 1.5;
   background-color: #1f1f1f;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 15px 25px;
 }
 
 body {
@@ -38,6 +39,7 @@ body {
 
 .aside {
   width: 40%;
+  max-width: 400px;
   background-color: #1f1f1f;
   display: flex;
   flex-direction: column;
@@ -50,7 +52,7 @@ body {
 
 .main {
   height: 100%;
-  width: 60%;
+  width: 100%;
   background-color: #0f0f0f;
   display: flex;
   padding: 50px;

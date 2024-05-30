@@ -4,7 +4,7 @@ import SelectBox from "./SelectBox";
 
 import mySpriteCanvasMemory from "./SpriteCanvasMemory"
 
-document.onkeydown = function(e){
+document.onkeydown = function (e) {
     e.preventDefault()
 }
 
@@ -48,7 +48,7 @@ interface PasteBuffer {
 /**
  * SpriteCanvas class. Used to define the canvas
  */
-export default class SpriteCanvas {
+class SpriteCanvas {
 
     public spriteTiles: Array<HTMLDivElement> = []
 
@@ -78,6 +78,14 @@ export default class SpriteCanvas {
 
     public autoselectFlag = true
 
+    /**
+     * Constructs a new instance of the class.
+     *
+     * @param spriteSheet - The sprite sheet object containing the sprite images.
+     * @param targetDiv - The HTML div element where the sprites will be rendered.
+     * @param width - The width of the target div element in pixels.
+     * @param height - The height of the target div element in pixels.
+     */
     constructor(spriteSheet: SpriteSheet, targetDiv: HTMLDivElement, width: number, height: number) {
 
         spriteSheet.spriteCanvas = this
@@ -187,9 +195,9 @@ export default class SpriteCanvas {
         let input = document.createElement('span')
         input.innerHTML = '<i class="bi bi-file-earmark-arrow-up-fill"></i> Load <span style="float:right;">Ctrl + L'
         // input.onclick = ''
-        li.addEventListener('click',()=>{
+        li.addEventListener('click', () => {
             this.load()
-        }) 
+        })
         li.appendChild(input)
         // li.innerHTML = '<span><i class="bi bi-file-earmark-arrow-up-fill"></i> Load <span style="float:right;">Ctrl + L</span>'
 
@@ -231,7 +239,7 @@ export default class SpriteCanvas {
                         break;
                     case 'd':
                         this.deleteTiles(this.mySelectBoxMemory.selectedArr, true)
-                    break;
+                        break;
                     case 'x':
                         this.copyTiles(this.mySelectBoxMemory.selectedArr)
                         this.deleteTiles(this.mySelectBoxMemory.selectedArr, true)
@@ -253,10 +261,10 @@ export default class SpriteCanvas {
                         break;
                     case 's':
                         this.save()
-                    break;
+                        break;
                     case 'l':
                         this.load()
-                    break;
+                        break;
                 }
             }
         })
@@ -264,6 +272,9 @@ export default class SpriteCanvas {
 
     // select tiles
 
+    /**
+     * Automatically selects next tile.
+     */
     autoSelect() {
         // let autoSelectedTileId = this.mySpriteCanvasMemory.selectedId! + 1
         let autoSelectedTile = this.mySpriteCanvasMemory.buttonsArray[this.mySpriteCanvasMemory.selectedId! + 1]
@@ -281,6 +292,9 @@ export default class SpriteCanvas {
         this.mySelectBoxMemory.selectedArr = [autoSelectedTile]
     }
 
+    /**
+     * Resets all selection methods.
+     */
     resetAllSelection() {
         console.log("--RESETTING ALL SELECTION METHODS--");
 
@@ -298,6 +312,11 @@ export default class SpriteCanvas {
 
     }
 
+    /**
+     * Selected tiles from beggining id to ending id.
+     * @param startingTileId - Starting tile id
+     * @param endingTileId - Starting tile id
+     */
     selectTiles(startingTileId: string, endingTileId: string) {
         let [startingX, startingY]: number[] = startingTileId.split('-').map(Number)
         let [endingX, endingY]: number[] = endingTileId.split('-').map(Number)
@@ -332,6 +351,11 @@ export default class SpriteCanvas {
 
     }
 
+    /**
+     * Selected tiles from beggining id to ending id.
+     * @param startingTileId - Starting tile id
+     * @param endingTileId - Starting tile id
+     */
     drawTiles(selectedTiles: HTMLButtonElement[], spriteDataString: string, redoFlag: boolean = false) {
 
         // memory formula
@@ -366,6 +390,10 @@ export default class SpriteCanvas {
         }
     }
 
+    /**
+     * Copies and compresses tiles to memory object
+     * @param selectedTiles - Array of selected tiles
+     */
     copyTiles(selectedTiles: HTMLButtonElement[]) {
 
         selectedTiles = selectedTiles.filter((value, index, array) => array.indexOf(value) === index)
@@ -394,6 +422,9 @@ export default class SpriteCanvas {
         }
     }
 
+    /**
+     * Begins rendering the paste preview
+     */
     pasteTiles() {
 
         if (!this.pasteFlag) {
@@ -423,6 +454,10 @@ export default class SpriteCanvas {
 
     }
 
+    /**
+     * Renders paste tile preview
+     * @param tileId - Tileid where it begins rendering
+     */
     renderPasteTilePreview(tileId: string) {
         let currentX: number
         let currentY: number
@@ -513,6 +548,9 @@ export default class SpriteCanvas {
 
     }
 
+    /**
+     * Actually draws the tiles to the canvas
+     */
     pasteTilesDraw() {
 
         // in reality this dosent draw it only adds itself to memory
@@ -551,6 +589,11 @@ export default class SpriteCanvas {
 
     }
 
+    /**
+     * Deletes tiles off of canvas
+     * @param selectedTiles - Array of selected tiles to delete
+     * @param redoFlag  - Boolean dictating wether redo is meant to create new timeline
+     */
     deleteTiles(selectedTiles: HTMLButtonElement[], redoFlag: boolean = false) {
 
         // memory formula
@@ -587,6 +630,9 @@ export default class SpriteCanvas {
         }
     }
 
+    /**
+     * Undo-s last action
+     */
     undo() {
         console.log('-- UNDO --');
 
@@ -601,7 +647,7 @@ export default class SpriteCanvas {
                     element.style.backgroundImage = this.myChangeMemory[this.myChangeMemoryIndex].previousDataUrls[this.myChangeMemory[this.myChangeMemoryIndex].previousTiles[index]]
 
                     // reset border
-                    if (element.style.backgroundImage != "") { element.classList.remove('spriteCanvasFilled') } else {element.classList.add('spriteCanvasTileFilled') }
+                    if (element.style.backgroundImage != "") { element.classList.remove('spriteCanvasFilled') } else { element.classList.add('spriteCanvasTileFilled') }
 
 
                 })
@@ -628,6 +674,9 @@ export default class SpriteCanvas {
         this.renderPasteTilePreview(this.mySpriteCanvasMemory.hoveredTile!.id)
     }
 
+    /**
+     * Redo-s last undone action
+     */
     redo() {
         console.log('-- REDO --');
 
@@ -664,25 +713,31 @@ export default class SpriteCanvas {
         this.renderPasteTilePreview(this.mySpriteCanvasMemory.hoveredTile!.id)
     }
 
+    /**
+     * Caps memory of actions at currently used action
+     */
     capMemory() {
         this.myChangeMemory = this.myChangeMemory.slice(0, this.myChangeMemoryIndex)
         console.log(this.myChangeMemory);
 
     }
 
+    /**
+     * Saves the canvas layout
+     */
     save() {
         interface saveData {
-            compressedTiles?:number[],
-            spriteDataUrls?:string[]
+            compressedTiles?: number[],
+            spriteDataUrls?: string[]
         }
 
-        let data:(saveData) = {}
+        let data: (saveData) = {}
 
-        let compressedTiles:number[] =[]
-        let spriteDataUrls:string[] = []
+        let compressedTiles: number[] = []
+        let spriteDataUrls: string[] = []
 
         this.mySpriteCanvasMemory.buttonsArray.forEach(element => {
-            if(!spriteDataUrls.includes(element.style.backgroundImage)){
+            if (!spriteDataUrls.includes(element.style.backgroundImage)) {
                 spriteDataUrls.push(element.style.backgroundImage)
             }
             compressedTiles.push(spriteDataUrls.indexOf(element.style.backgroundImage))
@@ -691,7 +746,7 @@ export default class SpriteCanvas {
         data.compressedTiles = compressedTiles
         data.spriteDataUrls = spriteDataUrls
 
-        let outData:string = JSON.stringify(data)
+        let outData: string = JSON.stringify(data)
 
         const blob = new Blob([outData], { type: 'json' });
 
@@ -705,21 +760,24 @@ export default class SpriteCanvas {
         document.body.removeChild(a)
     }
 
+    /**
+     * Loads the canvas layout
+     */
     load() {
         console.log(this);
 
         interface saveData {
-            compressedTiles?:number[],
-            spriteDataUrls?:string[]
+            compressedTiles?: number[],
+            spriteDataUrls?: string[]
         }
 
         var input = document.createElement('input');
         input.type = 'file';
         input.accept = '.json'
 
-        
 
-        let myCanvasButtonArray:HTMLButtonElement[] = this.mySpriteCanvasMemory.buttonsArray
+
+        let myCanvasButtonArray: HTMLButtonElement[] = this.mySpriteCanvasMemory.buttonsArray
 
         input.onchange = e => {
 
@@ -732,18 +790,18 @@ export default class SpriteCanvas {
             reader.readAsText(file, 'UTF-8');
 
 
-            
+
             // here we tell the reader what to do when it's done reading...
             reader.onload = (readerEvent) => {
                 //@ts-ignore
-                var content:saveData = JSON.parse( readerEvent.target.result) // this is the content!
+                var content: saveData = JSON.parse(readerEvent.target.result) // this is the content!
                 console.log(content);
-                
-                myCanvasButtonArray.forEach((ele,index) => {
+
+                myCanvasButtonArray.forEach((ele, index) => {
                     ele.style.backgroundImage = content.spriteDataUrls![content.compressedTiles![index]]
-                    if(ele.style.backgroundImage !=""){
+                    if (ele.style.backgroundImage != "") {
                         ele.classList.add('spriteCanvasFilled')
-                    } else{
+                    } else {
                         ele.className = "spriteCanvasTile"
                     }
                 });
@@ -756,3 +814,6 @@ export default class SpriteCanvas {
         console.log('');
     }
 }
+
+export type { SpriteCanvas }
+export default SpriteCanvas

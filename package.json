@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build-docs": "typedoc --plugin typedoc-plugin-rename-defaults --options ./typedoc.json --entryPointStrategy expand src/"
   },
   "devDependencies": {
+    "typedoc-plugin-rename-defaults": "^0.7.0",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   },

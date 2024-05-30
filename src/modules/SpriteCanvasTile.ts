@@ -22,7 +22,7 @@ export default class SpriteCanvasTile {
 
         button.classList.add('spriteCanvasTile')
 
-        button.addEventListener('click', () => {
+        button.addEventListener('click', (event) => {
 
 
             // let pastedFlag: boolean = false
@@ -44,19 +44,29 @@ export default class SpriteCanvasTile {
                 spriteCanvas.resetAllSelection()
 
             } else {
+                if (event.shiftKey) {
+                    if (!mySelectBoxMemory.selectedArr.includes(button)) {
+                        mySelectBoxMemory.selectedArr.push(button)
+                        button.classList.add('spriteCanvasTileSelected')
+                    } else {
+                        mySelectBoxMemory.selectedArr.splice(mySelectBoxMemory.selectedArr.indexOf(button), 1)
+                        button.classList.remove('spriteCanvasTileSelected')
+                    }
+                } else {
+                    // reset selection methods
 
-                // reset selection methods
+                    spriteCanvas.resetAllSelection()
 
-                spriteCanvas.resetAllSelection()
+                    // since draw only uses myselectboxmemory, im writing to it the new button HTMLElement
+                    // this is only to avoid redundancy
+                    // (and wasting more time) :_@
 
-                // since draw only uses myselectboxmemory, im writing to it the new button HTMLDivElement
-                // this is only to avoid redundancy
-                // (and wasting more time) :_@
+                    mySelectBoxMemory.selectedArr = [button]
+                    mySpriteCanvasMemory.selectedCanvasTile = button;
+                    mySpriteCanvasMemory.selectedId = this.id
+                    button.classList.add('spriteCanvasTileClicked')
+                }
 
-                mySelectBoxMemory.selectedArr = [button]
-                mySpriteCanvasMemory.selectedCanvasTile = button;
-                mySpriteCanvasMemory.selectedId = this.id
-                button.classList.add('spriteCanvasTileClicked')
 
             }
         })
