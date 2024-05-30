@@ -1,8 +1,12 @@
+/**
+ * Selectbox memory, shared for all other modules.
+ */
+
 interface SelectBoxMemory {
     mouseDown: (boolean)
-    initialTargetDiv: (HTMLElement | undefined),
-    endTargetDiv: (HTMLElement | undefined),
-    selectedArr: (HTMLElement[]),
+    initialTargetDiv: (HTMLDivElement | undefined),
+    endTargetDiv: (HTMLDivElement | undefined),
+    selectedArr: (HTMLButtonElement[]),
     selectionMode: string
 }
 

@@ -8,14 +8,18 @@ enum SelectMode {
     standard = ""
 }
 
+/**
+ * Selection box function
+ */
+
 class SelectBox {
 
     public mySelectboxMemory = mySelectBoxMemory;
 
     public mySpriteCanvasMemory;
 
-    selectBoxDiv: HTMLElement = document.createElement('div')
-    constructor(spriteCanvas: SpriteCanvas, targetDiv: HTMLElement) {
+    selectBoxDiv: HTMLDivElement = document.createElement('div')
+    constructor(spriteCanvas: SpriteCanvas, targetDiv: HTMLDivElement) {
 
         this.mySpriteCanvasMemory = spriteCanvas.mySpriteCanvasMemory
 
@@ -49,9 +53,9 @@ class SelectBox {
             this.selectBoxDiv.style.left = `${e.clientX}px`
 
 
-            mySelectBoxMemory.initialTargetDiv = <HTMLElement>e.target
+            mySelectBoxMemory.initialTargetDiv = <HTMLDivElement>e.target
             // @ts-expect-error
-            mySelectBoxMemory.initialTargetDivId = <HTMLElement>e.target.id
+            mySelectBoxMemory.initialTargetDivId = <HTMLDivElement>e.target.id
         })
 
         document.addEventListener('mousemove', (e) => {

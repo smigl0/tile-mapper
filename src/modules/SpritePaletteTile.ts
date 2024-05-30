@@ -1,11 +1,14 @@
-import mySpriteCanvasMemory from "./SpriteCanvasMemory";
 import mySelectBoxMemory from "./SelectBoxMemory";
 import SpriteCanvas from "./SpriteCanvas";
 
+
+/**
+ * Single palette tile. Click on while another canvas tile is selected, to paint on.
+ */
 export default class SpritePaletteTile {
 
     public spriteDataString: string;
-    public spriteDiv: HTMLElement;
+    public spriteDiv: HTMLDivElement;
     public spriteCanvas: (SpriteCanvas | undefined) = undefined;
 
     constructor(

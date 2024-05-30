@@ -2,10 +2,14 @@ import mySpriteCanvasMemory from "./SpriteCanvasMemory";
 import SpriteCanvas from "./SpriteCanvas";
 import mySelectBoxMemory from "./SelectBoxMemory";
 
+
+/**
+ * Sprite canvas tile, used to paint on tiles.
+ */
 export default class SpriteCanvasTile {
 
     public spriteDataString: string = '';
-    public spriteDiv: HTMLElement;
+    public spriteDiv: HTMLButtonElement;
     public id: number;
 
     constructor(spriteCanvas: SpriteCanvas, id: number, coordX: number, coordY: number) {
@@ -21,10 +25,10 @@ export default class SpriteCanvasTile {
         button.addEventListener('click', () => {
 
 
-            let pastedFlag: boolean = false
+            // let pastedFlag: boolean = false
             // reset pasteflag
             if (spriteCanvas.pasteFlag) {
-                pastedFlag = true
+                // pastedFlag = true
                 spriteCanvas.pasteFlag = false
 
                 spriteCanvas.pasteTilesDraw()
@@ -45,7 +49,7 @@ export default class SpriteCanvasTile {
 
                 spriteCanvas.resetAllSelection()
 
-                // since draw only uses myselectboxmemory, im writing to it the new button HTMLElement
+                // since draw only uses myselectboxmemory, im writing to it the new button HTMLDivElement
                 // this is only to avoid redundancy
                 // (and wasting more time) :_@
 
@@ -67,14 +71,17 @@ export default class SpriteCanvasTile {
 
             // selectbox Interaction
             if (spriteCanvas.mySelectBoxMemory.mouseDown && !spriteCanvas.pasteFlag) {
-                spriteCanvas.mySelectBoxMemory.endTargetDiv = (e.target as HTMLElement)
-                spriteCanvas.selectTiles(spriteCanvas.mySelectBoxMemory.initialTargetDiv!.id, (e.target as HTMLElement).id)
+                spriteCanvas.mySelectBoxMemory.endTargetDiv = (e.target as HTMLDivElement)
+                spriteCanvas.selectTiles(spriteCanvas.mySelectBoxMemory.initialTargetDiv!.id, (e.target as HTMLDivElement).id)
             }
         })
 
         this.spriteDiv = button
     }
 
+    /*
+    * Clears selected tiles from memory
+    */
     clearTileSelection() {
         this.spriteDiv.className = "spriteCanvasTile";
         mySpriteCanvasMemory.selectedCanvasTile = undefined

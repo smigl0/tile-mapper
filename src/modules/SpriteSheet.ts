@@ -1,10 +1,14 @@
 import SpriteCanvas from "./SpriteCanvas";
 import SpritePaletteTile from "./SpritePaletteTile";
 
+/**
+ * Main module. Creates sheet (palette) for sprite  canvas.
+ */
+
 export default class SpriteSheet {
 
     // public spritesArray: string[][] = [];
-    public targetDiv: HTMLElement;
+    public targetDiv: HTMLDivElement;
     public undoMemory: object[] = new Array<object>(10)
     public spriteCanvas: (SpriteCanvas | undefined) = undefined;
 
@@ -13,7 +17,7 @@ export default class SpriteSheet {
 
 
     constructor(
-        targetDiv: HTMLElement,
+        targetDiv: HTMLDivElement,
     ) {
         this.targetDiv = targetDiv
     }
